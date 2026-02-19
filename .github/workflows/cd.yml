@@ -33,7 +33,7 @@ jobs:
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
         run: |
           # 1. Configure SSH agent
           mkdir -p ~/.ssh
@@ -44,6 +44,6 @@ jobs:
           ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
 
           # 3. Sync files
-          rsync -avz --delete ./dist/ $SSH_USER@$SSH_HOST:/var/www/mini-app/
+          rsync -avz --delete ./dist/ $SSH_USERNAME@$SSH_HOST:/var/www/mini-app/
           
           echo "Deployed successfully to dev server."
