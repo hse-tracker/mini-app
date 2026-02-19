@@ -1,9 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import registrationIntro from './components/registration/registration-intro.vue';
+
+</script>
 
 <template>
-<h1>
-  hse-tracker
-</h1>
+  <registrationIntro />
 </template>
 
 <style scoped>
