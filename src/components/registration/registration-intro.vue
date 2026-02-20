@@ -1,5 +1,8 @@
 <script setup lang="ts">
-
+const emit = defineEmits<{
+  (e: 'next'): void;
+  (e: 'login'): void;
+}>();
 </script>
 
 <template>
@@ -11,10 +14,10 @@
     <p class="info">
       Добро пожаловать <br> в человекоцентричный трекер <br> успеваемости hse tracker
     </p>
-    <button class="continue">
+    <button class="continue" @click="emit('next')">
       Регистрация
     </button>
-    <button class="signin">
+    <button class="signin" @click="emit('login')">
       У меня есть аккаунт. Войти
     </button>
   </div>
