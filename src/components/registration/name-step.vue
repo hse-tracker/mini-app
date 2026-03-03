@@ -26,7 +26,7 @@ const isValid = computed(() => props.modelValue.length > 5);
       :value="modelValue"
       @input="handleInput"
       placeholder="Иванов Иван Иванович"
-      class="fullName-input"
+      class="fullName-input w-50"
     >
 
     <button @click="emit('next')">

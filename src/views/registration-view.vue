@@ -1,39 +1,59 @@
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive } from 'vue'
 import registrationIntro from '@/components/registration/registration-intro.vue'
 import nameStep from '@/components/registration/name-step.vue'
 import groupStep from '@/components/registration/group-step.vue'
 import { useRouter } from 'vue-router'
+import { useAuth } from '@/composables/use-auth.ts'
 
 const step = ref(1)
 const router = useRouter()
-
-const stepsMap: Record<number, any> = {
-  1: registrationIntro,
-  2: nameStep,
-  3: groupStep,
-}
-
-const currentComponent = computed(() => stepsMap[step.value])
+const { setToken } = useAuth();
 
 const formData = reactive({
   full_name: '',
-  faculty: '',
-  program: '',
-  course_number: '',
   group: '',
 })
 
-// const finishRegistration = () => {
-//   console.log("Sending in process: ", formData);
-//   // TODO: Add sending logic
-//
-//   router.push('/dashboard');
-// }
+const goToLogin = () => {
+  console.log("not implemented")
+  // TODO: implement login func
+}
+
+const finishRegistration = async () => {
+  try {
+    console.log("Sending in process... ", formData);
+
+    const response = await fetch("http://localhost:8080/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // TODO: add tg mini app initData
+      },
+      body: JSON.stringify(formData)
+    })
+
+    if (!response.ok) {
+      throw new Error(`${response.status}`)
+    }
+
+    const data = await response.json()
+
+    if (data.token) {
+      setToken(data.token)
+      router.push({name: 'Dashboard'});
+    } else {
+      throw new Error("No response from the server")
+    }
+  } catch (e) {
+    console.error(e)
+  }
+}
 </script>
 
 <template>
   <div class="registration-container">
+
     <!--Header with navigation-->
     <header class="header_nav" v-if="step > 1">
       <img class="header_back" @click="step--" src="/img/back_registration.svg" alt="" />
@@ -42,13 +62,26 @@ const formData = reactive({
     </header>
 
     <Transition name="slide-fade" mode="out-in">
-      <component
-        v-if="currentComponent"
-        :is="currentComponent"
-        :key="step"
-        v-model="formData.full_name"
-        @next="step++"
-      />
+      <div :key="step">
+        <registration-intro
+          v-if="step === 1"
+          @next="step++"
+          @login="goToLogin"
+        />
+
+        <name-step
+          v-else-if="step === 2"
+          v-model="formData.full_name"
+          @next="step++"
+        />
+
+        <group-step
+          v-else-if="step === 3"
+          v-model="formData.group"
+          @next="finishRegistration"
+        />
+      </div>
+
     </Transition>
   </div>
 </template>
