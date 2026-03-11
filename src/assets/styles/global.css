@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+@theme {
+  --color-bg: #F2F2F6;
+  --color-surface: #ffffff;
+  --color-text-primary: #1A1A1A;
+  --color-text-secondary: #8E8E93;
+  --color-accent-red: #FF453A;
+  --color-active-state: #000000;
+}
+
 /* --- reset css --- */
 *,
 *::before,
@@ -7,9 +16,6 @@
   box-sizing: border-box;
 }
 * {
-  margin: 0;
-  padding: 0;
-  border: 0;
   vertical-align: baseline;
 }
 html {
@@ -63,6 +69,7 @@ textarea {
 [hidden] {
   display: none !important;
 }
+/* --- reset css --- */
 
 body {
   font-family: "Inter", sans-serif;
@@ -70,4 +77,6 @@ body {
   font-weight: 400;
   font-style: normal;
   font-size: 16px;
+
+  background-color: #F2F2F6;
 }

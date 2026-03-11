@@ -11,12 +11,14 @@ const handleInput = (e: Event) => {
   emit('update:modelValue', value);
 };
 
+// valid input checker
 const isValid = computed(() => props.modelValue.length > 5);
+
 </script>
 
 <template>
-  <div class="step-content">
-    <img src="/img/step_registration.svg" alt="">
+  <div class="h-120 flex flex-col flex-nowrap justify-around items-center">
+    <img class="mt-8" src="/img/step_registration.svg" alt="">
 
     <div class="step-title">
       Введи своё ФИО (полностью)
@@ -29,19 +31,9 @@ const isValid = computed(() => props.modelValue.length > 5);
       class="fullName-input w-50"
     >
 
-    <button @click="emit('next')">
+    <div v-if="!isValid" class="h-6"></div>
+    <button v-if="isValid" @click="emit('next')">
       Далее
     </button>
   </div>
 </template>
-
-<style scoped>
-.step-content{
-  height: 30rem;
-
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: space-around;
-  align-items: center;
-}
-</style>

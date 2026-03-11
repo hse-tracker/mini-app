@@ -1,15 +1,13 @@
 <script setup lang="ts">
+
 const emit = defineEmits<{
   (e: 'next'): void;
-  (e: 'login'): void;
 }>();
+
 </script>
 
 <template>
-  <div class="wrapper">
-    <div class="title">
-      hse tracker
-    </div>
+  <div class="h-182 flex flex-col flex-nowrap items-center justify-around">
     <img src="/img/intro_registration.png" alt="">
 
     <div class="self-stretch text-center justify-start text-neutral text-base leading-5 font-medium">
@@ -23,31 +21,5 @@ const emit = defineEmits<{
         Регистрация
       </button>
     </div>
-
-    <div
-      class="self-stretch text-center justify-start text-neutral-700/60 text-xs"
-      @click="emit('login')"
-    >
-      У меня есть аккаунт. Войти
-    </div>
   </div>
 </template>
-
-<style scoped>
-  .wrapper{
-    height: 100vh;
-
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: space-around;
-    align-items: center;
-  }
-
-  .title{
-    font-size: 1rem;
-  }
-
-  .info{
-    text-align: center;
-  }
-</style>

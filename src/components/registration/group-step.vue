@@ -11,11 +11,11 @@ const handleInput = (e: Event) => {
   emit('update:modelValue', value);
 };
 
-const isValid = computed(() => props.modelValue.length > 5);
+const isValid = computed(() => props.modelValue.length >= 3);
 </script>
 
 <template>
-  <div class="step-content">
+  <div class="h-120 flex flex-col flex-nowrap justify-around items-center">
     <img src="/img/step2_registration.svg" alt="">
 
     <div class="step-title">
@@ -29,19 +29,9 @@ const isValid = computed(() => props.modelValue.length > 5);
       class="group-input"
     >
 
-    <button :disabled="!isValid" @click="$emit('next')">
+    <div v-if="!isValid" class="h-6"></div>
+    <button v-if="isValid" @click="emit('next')">
       Далее
     </button>
   </div>
 </template>
-
-<style scoped>
-.step-content{
-  height: 30rem;
-
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: space-around;
-  align-items: center;
-}
-</style>

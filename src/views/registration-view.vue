@@ -1,29 +1,31 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
+
+// steps components
 import registrationIntro from '@/components/registration/registration-intro.vue'
 import nameStep from '@/components/registration/name-step.vue'
 import groupStep from '@/components/registration/group-step.vue'
+
 import { useRouter } from 'vue-router'
 import { useAuth } from '@/composables/use-auth.ts'
 
+// current step
 const step = ref(1)
 const router = useRouter()
 const { setToken } = useAuth();
 
+// registration data
 const formData = reactive({
   full_name: '',
   group: '',
 })
 
-const goToLogin = () => {
-  console.log("not implemented")
-  // TODO: implement login func
-}
-
+// sending formData to backend
 const finishRegistration = async () => {
   try {
     console.log("Sending in process... ", formData);
 
+    // sending request
     const response = await fetch("http://localhost:8080/api/register", {
       method: "POST",
       headers: {
@@ -33,15 +35,17 @@ const finishRegistration = async () => {
       body: JSON.stringify(formData)
     })
 
+    // error checker
     if (!response.ok) {
       throw new Error(`${response.status}`)
     }
 
     const data = await response.json()
 
+    // checker if token exists
     if (data.token) {
       setToken(data.token)
-      router.push({name: 'Dashboard'});
+      await router.push({ name: 'Dashboard' });
     } else {
       throw new Error("No response from the server")
     }
@@ -52,13 +56,16 @@ const finishRegistration = async () => {
 </script>
 
 <template>
-  <div class="registration-container">
-
+  <div class="h-full">
     <!--Header with navigation-->
-    <header class="header_nav" v-if="step > 1">
-      <img class="header_back" @click="step--" src="/img/back_registration.svg" alt="" />
-      <span class="header_title"> регистрация </span>
-      <div class="header_right"></div>
+    <header class="flex flex-row flex-nowrap h-4 w-full justify-between items-center mt-16">
+      <div v-if="step === 1"></div>
+      <img class="ml-6" v-if="step > 1" @click="step--" src="/img/back_registration.svg" alt="" />
+
+      <div class="" v-if="step === 1">hse tracker</div>
+      <div class="" v-if="step > 1">регистрация</div>
+
+      <div class="mr-6"></div>
     </header>
 
     <Transition name="slide-fade" mode="out-in">
@@ -66,7 +73,6 @@ const finishRegistration = async () => {
         <registration-intro
           v-if="step === 1"
           @next="step++"
-          @login="goToLogin"
         />
 
         <name-step
@@ -81,41 +87,13 @@ const finishRegistration = async () => {
           @next="finishRegistration"
         />
       </div>
-
     </Transition>
   </div>
 </template>
 
 <style scoped>
 .slide-fade-enter-active,
-.slide-fade-leave-active {
-  transition: all 0.3s ease-out;
-}
-
-.slide-fade-enter-from {
-  transform: translateX(20px);
-  opacity: 0;
-}
-
-.slide-fade-leave-to {
-  transform: translateX(-20px);
-  opacity: 0;
-}
-
-.header_nav{
-  height: 6rem;
-  width: 100vw;
-
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.header_back{
-  margin-left: 1.5rem;
-}
-.header_right{
-  margin-right: 1.5rem;
-}
+.slide-fade-leave-active { transition: all 0.3s ease-out; }
+.slide-fade-enter-from { transform: translateX(20px); opacity: 0; }
+.slide-fade-leave-to { transform: translateX(-20px); opacity: 0; }
 </style>
