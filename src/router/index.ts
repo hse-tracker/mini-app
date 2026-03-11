@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import registrationView from '@/views/registration-view.vue'
 import dashboardView from '@/views/dashboard-view.vue'
 import { useAuth } from '@/composables/use-auth.ts'
+import subjectView from '@/views/subject-view.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,6 +21,12 @@ const router = createRouter({
       path: '/dashboard',
       name: 'Dashboard',
       component: dashboardView,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/subject',
+      name: 'Subject',
+      component: subjectView,
       meta: { requiresAuth: true }
     }
   ],
