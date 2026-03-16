@@ -20,7 +20,7 @@ const fetchSubjects = async () => {
   try {
     isLoading.value = true
     const token = getToken()
-    const response = await fetch("http://localhost:8080/api/subjects", {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/subjects`, {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${token}`

@@ -2,48 +2,37 @@ name: CD Pipeline
 
 on:
   push:
-    branches: [ "a" ]
+    branches: [ "develop", "main" ]
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '20'
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Build production
+      - name: Build project
         run: npm run build
+        #   VITE_API_URL: ${{ secrets.VITE_API_URL }}
 
-      - name: Connect to Tailscale
-        uses: tailscale/github-action@v3
+      - name: Deploy via SCP
+        uses: appleboy/scp-action@v0.1.7
         with:
-          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
-          version: 1.94.2
-
-      - name: Deploy to test environment
-        env:
-          SSH_KEY: ${{ secrets.SSH_KEY }}
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
-        run: |
-          # 1. Configure SSH agent
-          mkdir -p ~/.ssh
-          printf "%s\n" "$SSH_KEY" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          
-          # 2. Add test environment to known hosts
-          ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
-
-          # 3. Sync files
-          rsync -avz --delete ./dist/ $SSH_USERNAME@$SSH_HOST:/var/www/mini-app/
-          
-          echo "Deployed successfully to dev server."
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          passphrase: ${{ secrets.SERVER_SSH_PASSPHRASE }}
+          port: 22
+          source: "dist/*"
+          target: ${{ secrets.SERVER_TARGET_DIR }}
+          strip_components: 1
