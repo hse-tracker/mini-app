@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import router from '@/router'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const props = defineProps<{
   subject: {
     id: number;

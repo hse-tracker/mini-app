@@ -7,12 +7,7 @@ import subjectBubble from '@/components/subject/subject-bubble.vue';
 
 const { getToken } = useAuth()
 
-interface Subject {
-  id: number;
-  name: string;
-  status: string
-}
-
+// eslint-disable-next-line
 const subjects = ref<any[]>([])
 const isLoading = ref(true)
 
