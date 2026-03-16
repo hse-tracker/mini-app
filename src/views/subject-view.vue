@@ -1,8 +1,16 @@
 <script setup lang="ts">
-
 import router from '@/router'
 import AssessmentElement from '@/components/assessments/assessment-element.vue'
 import AssessmentBlock from '@/components/assessments/assessment-block.vue'
+import { ref } from 'vue'
+
+const notificationsEnabled = ref(true)
+
+const toggleNotifications = () => {
+  notificationsEnabled.value = !notificationsEnabled.value;
+
+  // TODO: implement PATCH-request to backend
+}
 </script>
 
 <template>
@@ -16,7 +24,12 @@ import AssessmentBlock from '@/components/assessments/assessment-block.vue'
         class="ml-6" src="/img/back_arrow.svg" alt=""
       />
       <div class="">анализ данных</div>
-      <img class="mr-6" src="/img/UI/bell.svg" alt="" />
+      <img
+        @click="toggleNotifications"
+        class="mr-6 cursor-pointer"
+        :src="notificationsEnabled ? '/img/UI/bell.svg' : '/img/UI/bell_off.svg'"
+        alt="уведомления"
+      />
     </header>
 
     <!--Subject formula-->
