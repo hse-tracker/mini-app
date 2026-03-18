@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 
 // steps components
 import registrationIntro from '@/components/registration/registration-intro.vue'
@@ -16,8 +16,19 @@ const { setToken } = useAuth();
 
 // registration data
 const formData = reactive({
+  init_data: '',
   full_name: '',
   group: '',
+})
+
+onMounted(() => {
+  const tg = window.Telegram?.WebApp;
+  if (tg?.initData) {
+    formData.init_data = tg.initData;
+  } else {
+    // formData.init_data = "mock_local_data";
+    console.warn("No Telegram initData found");
+  }
 })
 
 // sending formData to backend
@@ -30,7 +41,6 @@ const finishRegistration = async () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // TODO: add tg mini app initData
       },
       body: JSON.stringify(formData)
     })
@@ -45,7 +55,7 @@ const finishRegistration = async () => {
     // checker if token exists
     if (data.token) {
       setToken(data.token)
-      await router.push({ name: 'Dashboard' });
+      await router.push({ name: 'Tutorial' });
     } else {
       throw new Error("No response from the server")
     }

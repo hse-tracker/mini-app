@@ -28,6 +28,7 @@ const isValid = computed(() => props.modelValue.length > 5);
       :value="modelValue"
       @input="handleInput"
       placeholder="Иванов Иван Иванович"
+      @keydown.enter="isValid && emit('next')"
       class="fullName-input w-50"
     >
 

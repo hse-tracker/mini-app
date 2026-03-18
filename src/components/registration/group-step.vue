@@ -25,6 +25,7 @@ const isValid = computed(() => props.modelValue.length >= 3);
     <input
       :value="modelValue"
       @input="handleInput"
+      @keydown.enter="isValid && emit('next')"
       placeholder="Б23ДЗ10"
       class="group-input"
     >

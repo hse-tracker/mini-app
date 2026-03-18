@@ -10,6 +10,7 @@
   --color-text-secondary: #8E8E93;
   --color-accent-red: #FF453A;
   --color-active-state: #000000;
+  --color-tutor: rgba(37, 37, 37, 0.8);
 }
 
 /* --- reset css --- */
@@ -82,4 +83,5 @@ body {
   font-size: 16px;
 
   background-color: #F2F2F6;
+  overflow-x: hidden;
 }

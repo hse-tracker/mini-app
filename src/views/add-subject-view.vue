@@ -48,7 +48,6 @@ const sendSubject = async () => {
 </script>
 
 <template>
-  <!--Wrapper-->
   <div
     @click="router.push({ name: 'Dashboard' });"
     class="flex flex-col justify-start items-center bg-black-background w-full h-screen">
@@ -95,6 +94,4 @@ const sendSubject = async () => {
       </div>
     </div>
   </div>
-
-
 </template>
