@@ -43,13 +43,32 @@ const viewMode = ref<'list' | 'bubble'>('bubble')
 onMounted(() => {
   fetchSubjects()
 })
+
+const deleteSubjectHandler = async (id: number) => {
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/subjects/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${getToken()}`
+      }
+    })
+
+    if (!response.ok) {
+      throw new Error(`error: ${response.status}`)
+    }
+
+    subjects.value = subjects.value.filter(s => s.id !== id)
+  } catch (e) {
+    console.error("Ошибка при удалении:", e)
+    alert("Не удалось удалить предмет")
+  }
+}
 </script>
 
 <template>
-  <!--Wrapper-->
   <div class="flex flex-col justify-center items-center">
     <!--Header with navigation-->
-    <header class="flex flex-row flex-nowrap h-4 w-full justify-center items-center mt-16">
+    <header class="flex flex-row flex-nowrap h-4 w-full justify-center items-center mt-10">
       <div class="">hse tracker</div>
     </header>
 
@@ -96,6 +115,7 @@ onMounted(() => {
           v-for="subject in subjects"
           :key="subject.id"
           :subject="subject"
+          @delete="deleteSubjectHandler"
         />
       </div>
 
@@ -103,7 +123,7 @@ onMounted(() => {
       <div
         v-else
         class="flex flex-row flex-wrap justify-center items-center gap-x-8 gap-y-8
-        w-86 h-170 shadow-2xl px-6 mt-3 rounded-4xl bg-color-button py-8 p-5">
+        w-86 h-160 shadow-2xl px-6 mt-3 rounded-4xl bg-color-button py-8 p-5">
         <subjectBubble
           v-for="(subject, index) in subjects"
           :key="subject.id"
