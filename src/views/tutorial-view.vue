@@ -19,7 +19,7 @@ const slides =[
 ]
 
 const currentSlide = ref(0)
-const activeSlide = computed(() => slides[ currentSlide.value ])
+const activeSlide = computed(() => slides[ currentSlide.value ]!)
 
 const nextSlide = () => {
   if (currentSlide.value < slides.length - 1) {
