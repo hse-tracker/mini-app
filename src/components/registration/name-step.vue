@@ -12,7 +12,13 @@ const handleInput = (e: Event) => {
 };
 
 // valid input checker
-const isValid = computed(() => props.modelValue.length > 5);
+const isValid = computed(() => {
+  const text = props.modelValue.trim();
+  if (!text) return false;
+
+  const words = text.split(/\s+/);
+  return words.length >= 2 && words.length <= 4;
+});
 
 </script>
 
