@@ -8,7 +8,7 @@ const emit = defineEmits<{
 
 <template>
   <div class="h-182 flex flex-col flex-nowrap items-center justify-around">
-    <img src="/img/intro_registration.png" alt="">
+    <img src="/img/intro_registration.svg" alt="">
 
     <div class="self-stretch text-center justify-start text-neutral text-base leading-5 font-medium">
       Добро пожаловать <br/>в человекоцентричный трекер <br> успеваемости hse tracker

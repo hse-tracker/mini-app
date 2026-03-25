@@ -13,6 +13,13 @@ const displayGrade = computed(() => {
   const g = parseFloat(props.element.value.replace(',', '.'));
   return isNaN(g) ? props.element.value : g.toFixed(1);
 });
+
+const displayName = computed(() => {
+  if (!props.element.name) return '';
+  return props.element.name.length > 7
+    ? props.element.name.slice(0, 7) + '...'
+    : props.element.name;
+});
 </script>
 
 <template>
@@ -21,7 +28,7 @@ const displayGrade = computed(() => {
 
     <!--Assessment name-->
     <div class="text-text-secondary text-xs text-center">
-      {{ element.name }}
+      {{ displayName }}
     </div>
 
     <!--Assessment value-->

@@ -53,7 +53,7 @@ const rootNode = computed(() => subjectData.value?.structure?.[0] || null)
 
 const displayGrade = computed(() => {
   const val = rootNode.value?.value;
-  if (!val) return '0.0'; // Если оценки еще нет
+  if (!val) return '0.00'; // Если оценки еще нет
 
   const normalizedVal = val.replace(',', '.');
   const num = parseFloat(normalizedVal);
@@ -61,8 +61,7 @@ const displayGrade = computed(() => {
   if (isNaN(num)) {
     return val;
   }
-
-  return num.toFixed(1);
+  return num.toFixed(2);
 });
 
 const rootChildren = computed(() => rootNode.value?.children ||[])
@@ -86,7 +85,7 @@ const folders = computed(() => {
     <div v-else class="flex flex-col flex-nowrap items-center w-full pb-10">
 
       <!--Header with navigation-->
-      <header class="flex flex-row flex-nowrap h-4 w-full justify-between items-center mt-16 px-6">
+      <header class="flex flex-row flex-nowrap h-4 w-full justify-between items-center mt-24 px-6">
         <img
           @click="router.push({ name: 'Dashboard' })"
           class="cursor-pointer" src="/img/back_arrow.svg" alt=""

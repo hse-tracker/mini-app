@@ -13,9 +13,9 @@ const props = defineProps<{
 }>()
 
 const displayGrade = computed(() => {
-  if (!props.folder.value) return '0.0';
+  if (!props.folder.value) return '0.00';
   const g = parseFloat(props.folder.value.replace(',', '.'));
-  return isNaN(g) ? props.folder.value : g.toFixed(1);
+  return isNaN(g) ? props.folder.value : g.toFixed(2);
 });
 </script>
 
