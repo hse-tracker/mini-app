@@ -11,6 +11,9 @@ const { getToken } = useAuth()
 const subjects = ref<any[]>([])
 const isLoading = ref(true)
 
+const isErrorSheetOpen = ref(false)
+const currentErrorMessage = ref('')
+
 const fetchSubjects = async () => {
   try {
     isLoading.value = true
@@ -62,6 +65,34 @@ const deleteSubjectHandler = async (id: number) => {
     console.error("Ошибка при удалении:", e)
     alert("Не удалось удалить предмет")
   }
+}
+
+// error handling
+const categorizeError = (rawMsg: string) => {
+  if (!rawMsg) return 'Произошла непредвиденная ошибка при обработке таблицы.';
+
+  const lowerMsg = rawMsg.toLowerCase();
+
+  if (lowerMsg.includes('invalid google sheets url') || lowerMsg.includes('regex')) {
+    return 'Ссылка некорректная - проверь адрес ссылки и попробуй прикрепить её снова. Если возникнут трудности, пиши в чат телеграм-бота с описанием проблемы';
+  }
+  if (lowerMsg.includes('403') || lowerMsg.includes('permission')) {
+    return 'Нет доступа к таблице. Убедитесь, что в настройках доступа Google Диска выбран пункт "Все, у кого есть ссылка" (с правами читателя).';
+  }
+  if (lowerMsg.includes('400') || lowerMsg.includes('xlsx') || lowerMsg.includes('unsupported')) {
+    return 'Некорректный тип таблицы. Похоже, это Excel-файл (.xlsx). Откройте его через Google Таблицы и сохраните как Google Таблицу.';
+  }
+
+  return `Неизвестная ошибка обработки. Попробуйте удалить и добавить предмет заново.`;
+}
+
+const openErrorSheet = (rawMessage: string) => {
+  currentErrorMessage.value = categorizeError(rawMessage);
+  isErrorSheetOpen.value = true;
+}
+
+const closeErrorSheet = () => {
+  isErrorSheetOpen.value = false;
 }
 </script>
 
@@ -116,6 +147,7 @@ const deleteSubjectHandler = async (id: number) => {
           :key="subject.id"
           :subject="subject"
           @delete="deleteSubjectHandler"
+          @show-error="openErrorSheet"
         />
       </div>
 
@@ -129,6 +161,7 @@ const deleteSubjectHandler = async (id: number) => {
           :key="subject.id"
           :subject="subject"
           :index="index"
+          @show-error="openErrorSheet"
         />
       </div>
     </div>
@@ -139,5 +172,56 @@ const deleteSubjectHandler = async (id: number) => {
       class="fixed bottom-5 flex items-center justify-center h-24 w-24 rounded-full bg-button border-3 border-white">
       <img src="/img/UI/plus.svg" alt="">
     </div>
+
+    <!-- Error sheet -->
+    <transition name="slide-up">
+      <div
+        v-if="isErrorSheetOpen"
+        class="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm"
+        @click="closeErrorSheet"
+      >
+        <div
+          class="bg-tutor w-full max-w-md h-92 p-6 pb-10 rounded-t-[32px]
+          flex flex-col items-center justify-between shadow-2xl"
+          @click.stop
+        >
+
+          <h2 class="text-xl text-red-500 mb-3">
+            Ошибка
+          </h2>
+
+          <p class="font-semibold text-white text-center text-md leading-relaxed px-2 w-88">
+            {{ currentErrorMessage }}
+          </p>
+
+          <div
+            @click="closeErrorSheet"
+            class="w-21 h-8 flex justify-center items-center text-md bg-accent-red text-white font-semibold rounded-xl transition-colors"
+          >
+            Окей →
+          </div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
+
+<style scoped>
+.slide-up-enter-active,
+.slide-up-leave-active {
+  transition: opacity 0.3s ease-out;
+}
+.slide-up-enter-active > div,
+.slide-up-leave-active > div {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide-up-enter-from,
+.slide-up-leave-to {
+  opacity: 0;
+}
+.slide-up-enter-from > div,
+.slide-up-leave-to > div {
+  transform: translateY(100%);
+}
+</style>
