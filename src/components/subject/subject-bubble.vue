@@ -8,8 +8,13 @@ const props = defineProps<{
     name: string;
     status: string;
     grade?: string | null;
+    error_message?: string | null;
   };
   index: number;
+}>()
+
+const emit = defineEmits<{
+  (e: 'show-error', msg: string): void
 }>()
 
 const parsedGrade = computed(() => {
@@ -53,8 +58,15 @@ const offsets =[
   'translate-y-0',  // center
   'translate-y-5'   // 20px down
 ];
-
 const offsetClass = computed(() => offsets[props.index % offsets.length]);
+
+const handleClick = () => {
+  if (props.subject.status === 'error') {
+    emit('show-error', props.subject.error_message || '')
+  } else {
+    router.push({ name: 'Subject', params: { id: props.subject.id } });
+  }
+}
 </script>
 
 <template>
@@ -62,7 +74,7 @@ const offsetClass = computed(() => offsets[props.index % offsets.length]);
     :class="offsetClass"
   >
     <div
-      @click="router.push({ name: 'Subject', params: { id: subject.id } });"
+      @click="handleClick"
       :style="bubbleStyle"
       class="flex flex-col justify-center items-center bg-surface rounded-full shadow-xl shrink-0 cursor-pointer transition-all duration-300"
     >
@@ -78,6 +90,5 @@ const offsetClass = computed(() => offsets[props.index % offsets.length]);
       {{ subject.name }}
     </div>
   </div>
-
 
 </template>

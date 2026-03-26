@@ -8,11 +8,13 @@ const props = defineProps<{
     name: string;
     status: string;
     grade?: string | null;
+    error_message?: string | null;
   }
 }>()
 
 const emit = defineEmits<{
   (e: 'delete', id: number): void
+  (e: 'show-error', msg: string): void
 }>()
 
 const statusMap: Record<string, string> = {
@@ -52,7 +54,11 @@ const handleClick = () => {
   if (isDeletingMode.value) {
     isDeletingMode.value = false
   } else {
-    router.push({ name: 'Subject', params: { id: props.subject.id } });
+    if (props.subject.status === 'error') {
+      emit('show-error', props.subject.error_message || '')
+    } else {
+      router.push({ name: 'Subject', params: { id: props.subject.id } });
+    }
   }
 }
 
