@@ -98,6 +98,12 @@ const displayPredictedGrade = computed(() => {
   }
   return sum.toFixed(1);
 });
+
+const updatePrediction = (id: number, val: number) => {
+  if (predictions.value[id]) {
+    predictions.value[id].current = val;
+  }
+}
 </script>
 
 <template>
@@ -153,14 +159,15 @@ const displayPredictedGrade = computed(() => {
           <span class="z-10">{{ displayPredictedGrade }}</span>
         </div>
 
-        <!--Assessments block (Root Children)-->
+        <!--Assessments block (Root Children - ТЕПЕРЬ С КРУТИЛКАМИ)-->
         <div v-if="rootChildren.length > 0" class="w-86 min-h-33 bg-button border-6 border-white rounded-4xl mt-8 flex flex-row flex-wrap justify-around items-center p-4 gap-4">
           <PredictDial
             v-for="child in rootChildren"
             :key="child.id"
             :element="child"
-            v-model="predictions[child.id].current"
-            :original="predictions[child.id].original"
+            :modelValue="predictions[child.id]?.current || 0"
+            @update:modelValue="(val) => updatePrediction(child.id, val)"
+            :original="predictions[child.id]?.original || 0"
           />
         </div>
       </div>

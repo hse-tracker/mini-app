@@ -42,16 +42,36 @@ const dialScale = computed(() => {
 const startDrag = (e: MouseEvent | TouchEvent) => {
   e.preventDefault()
   if (!knobRef.value) return
+
   const rect = knobRef.value.getBoundingClientRect()
   const cx = rect.left + rect.width / 2
   const cy = rect.top + rect.height / 2
-  const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
-  const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY
+
+  let clientX = 0;
+  let clientY = 0;
+
+  if ('touches' in e) {
+    const touchEvent = e as TouchEvent;
+    if (touchEvent.touches && touchEvent.touches.length > 0) {
+      const touch = touchEvent.touches[0];
+      if (touch) {
+        clientX = touch.clientX;
+        clientY = touch.clientY;
+      }
+    }
+  } else {
+    const mouseEvent = e as MouseEvent;
+    clientX = mouseEvent.clientX;
+    clientY = mouseEvent.clientY;
+  }
+
   const dx = clientX - cx
   const dy = clientY - cy
+
   isDragging = true
   lastAngle = Math.atan2(dy, dx) * (180 / Math.PI)
   continuousAngle = (props.modelValue / 10) * 360 + 180
+
   window.addEventListener('mousemove', onDrag)
   window.addEventListener('touchmove', onDrag, { passive: false })
   window.addEventListener('mouseup', stopDrag)
@@ -61,11 +81,29 @@ const startDrag = (e: MouseEvent | TouchEvent) => {
 const onDrag = (e: MouseEvent | TouchEvent) => {
   if (e.cancelable) e.preventDefault()
   if (!knobRef.value || !isDragging) return
+
   const rect = knobRef.value.getBoundingClientRect()
   const cx = rect.left + rect.width / 2
   const cy = rect.top + rect.height / 2
-  const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
-  const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY
+
+  let clientX = 0;
+  let clientY = 0;
+
+  if ('touches' in e) {
+    const touchEvent = e as TouchEvent;
+    if (touchEvent.touches && touchEvent.touches.length > 0) {
+      const touch = touchEvent.touches[0];
+      if (touch) {
+        clientX = touch.clientX;
+        clientY = touch.clientY;
+      }
+    }
+  } else {
+    const mouseEvent = e as MouseEvent;
+    clientX = mouseEvent.clientX;
+    clientY = mouseEvent.clientY;
+  }
+
   const dx = clientX - cx
   const dy = clientY - cy
   const currentAngle = Math.atan2(dy, dx) * (180 / Math.PI)
@@ -73,8 +111,10 @@ const onDrag = (e: MouseEvent | TouchEvent) => {
   let delta = currentAngle - lastAngle
   if (delta > 180) delta -= 360
   if (delta < -180) delta += 360
+
   continuousAngle += delta
   lastAngle = currentAngle
+
   let val = (continuousAngle - 180) / 36
 
   if (val < props.original) {
@@ -85,6 +125,7 @@ const onDrag = (e: MouseEvent | TouchEvent) => {
     val = 10
     continuousAngle = (10 * 36) + 180
   }
+
   emit('update:modelValue', Math.round(val * 10) / 10)
 }
 
