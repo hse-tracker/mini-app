@@ -139,4 +139,4 @@ fabric.properties
 
 .env
 .env.production
-all.txt
+frontend.txt

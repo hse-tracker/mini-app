@@ -5,7 +5,7 @@ import { onMounted, ref } from 'vue'
 import { useAuth } from '@/composables/use-auth.ts'
 import subjectBubble from '@/components/subject/subject-bubble.vue';
 
-const { getToken } = useAuth()
+const { getToken, logout } = useAuth()
 
 // eslint-disable-next-line
 const subjects = ref<any[]>([])
@@ -24,6 +24,11 @@ const fetchSubjects = async () => {
         "Authorization": `Bearer ${token}`
       }
     })
+
+    if (response.status === 401) {
+      logout()
+      return
+    }
 
     if (!response.ok) {
       throw new Error(`internal error: ${response.status}`)

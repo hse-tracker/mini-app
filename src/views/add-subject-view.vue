@@ -3,7 +3,7 @@ import router from '@/router'
 import { reactive } from 'vue'
 import { useAuth } from '@/composables/use-auth.ts'
 
-const { getToken } = useAuth()
+const { getToken, logout } = useAuth()
 
 // initial subject data
 const subjectData = reactive({
@@ -32,6 +32,11 @@ const sendSubject = async () => {
       },
       body: JSON.stringify(subjectData)
     })
+
+    if (response.status === 401) {
+      logout()
+      return
+    }
 
     // error checker
     if (!response.ok) {

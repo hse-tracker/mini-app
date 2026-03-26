@@ -9,7 +9,7 @@ import PredictDial from '@/components/assessments/predict-dial.vue'
 
 const router = useRouter()
 const route = useRoute()
-const { getToken } = useAuth()
+const { getToken, logout } = useAuth()
 
 const subjectData = ref<any>(null)
 const isLoading = ref(true)
@@ -34,6 +34,11 @@ const fetchSubjectData = async () => {
         "Authorization": `Bearer ${token}`
       }
     })
+
+    if (response.status === 401) {
+      logout()
+      return
+    }
 
     if (!response.ok) {
       throw new Error(`Ошибка загрузки: ${response.status}`)
