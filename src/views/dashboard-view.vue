@@ -104,8 +104,16 @@ const closeErrorSheet = () => {
 <template>
   <div class="flex flex-col justify-center items-center">
     <!--Header with navigation-->
-    <header class="flex flex-row flex-nowrap h-4 w-full justify-center items-center mt-10">
+    <header class="flex flex-row flex-nowrap h-4 w-full justify-between items-center mt-24">
+      <div class="w-5 ml-5"></div>
       <div class="">hse tracker</div>
+
+      <div
+        @click="logout"
+        class="w-5 mr-5"
+      >
+        <img class="w-5 mr-5" src="/img/UI/logout.svg" alt="">
+      </div>
     </header>
 
     <!--Content view switch-->
