@@ -40,6 +40,24 @@ const fetchSubjects = async () => {
     console.log(data)
 
     subjects.value = data || []
+    
+    if (subjects.value.length > 0) {
+      const tracked = JSON.parse(localStorage.getItem('tracked_subscriptions') || '[]')
+      let hasNewSubscriptions = false
+
+      subjects.value.forEach((sub: any) => {
+        if (!sub.is_creator && !tracked.includes(sub.id)) {
+          trackEvent('existing_sheet_subscribed', { subject_id: sub.id })
+          tracked.push(sub.id)
+          hasNewSubscriptions = true
+        }
+      })
+
+      if (hasNewSubscriptions) {
+        localStorage.setItem('tracked_subscriptions', JSON.stringify(tracked))
+      }
+    }
+
   } catch (e) {
     console.error("error while loading subjects: ", e)
   } finally {
