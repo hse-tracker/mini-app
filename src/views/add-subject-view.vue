@@ -2,6 +2,7 @@
 import router from '@/router'
 import { reactive } from 'vue'
 import { useAuth } from '@/composables/use-auth.ts'
+import { trackEvent } from '@/utils/analytics'
 
 const { getToken, logout } = useAuth()
 
@@ -42,6 +43,8 @@ const sendSubject = async () => {
     if (!response.ok) {
       throw new Error(`${response.status}`)
     }
+
+    trackEvent('new_sheet_added');
 
     await router.push({ name: 'Dashboard' })
 

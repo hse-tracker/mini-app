@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { trackEvent } from '@/utils/analytics'
 
 const props = defineProps<{
   element: { name: string; weight?: number | null };
@@ -70,6 +71,10 @@ const startDrag = (e: MouseEvent | TouchEvent) => {
 
   isDragging = true
   lastAngle = Math.atan2(dy, dx) * (180 / Math.PI)
+  if (!knobRef.value?.dataset.tracked) {
+    trackEvent('calculation_performed');
+    if (knobRef.value) knobRef.value.dataset.tracked = "true";
+  }
   continuousAngle = (props.modelValue / 10) * 360 + 180
 
   window.addEventListener('mousemove', onDrag)

@@ -5,6 +5,7 @@ import { useAuth } from '@/composables/use-auth.ts'
 import subjectView from '@/views/subject-view.vue'
 import addSubjectView from '@/views/add-subject-view.vue'
 import tutorialView from '@/views/tutorial-view.vue'
+import { logUXToBackend, trackPageView } from '@/utils/analytics'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -63,6 +64,7 @@ router.beforeEach((to, from, next) => {
     }).catch(err => {
       console.warn("Failed to log navigation:", err);
     });
+    logUXToBackend(String(to.name), token);
   }
 
   // if route requires auth and user is not loged in => redirect to registration
@@ -77,6 +79,10 @@ router.beforeEach((to, from, next) => {
 
   // else (everything is ok)
   next();
+});
+
+router.afterEach((to) => {
+  trackPageView(to.fullPath);
 });
 
 export default router

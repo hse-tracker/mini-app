@@ -16,5 +16,6 @@ declare global {
         };
       };
     };
+    ym?: (counterId: number, action: string, target?: string | object, params?: object) => void;
   }
 }
