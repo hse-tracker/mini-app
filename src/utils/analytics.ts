@@ -1,14 +1,20 @@
 const YM_COUNTER_ID = 108365028;
 
 export const trackPageView = (url: string) => {
+  console.log(`[Analytics] send page:`, url);
   if (typeof window.ym !== 'undefined') {
     window.ym(YM_COUNTER_ID, 'hit', url);
+  } else {
+    console.warn(`[Analytics] window.ym not found`);
   }
 };
 
 export const trackEvent = (eventName: string, params?: object) => {
+  console.log(`[Analytics] send event:`, eventName, params);
   if (typeof window.ym !== 'undefined') {
     window.ym(YM_COUNTER_ID, 'reachGoal', eventName, params);
+  } else {
+    console.warn(`[Analytics] window.ym not found`);
   }
 };
 
