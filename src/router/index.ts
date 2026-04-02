@@ -48,24 +48,8 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const { isAuthenticated, getToken } = useAuth();
+  const { isAuthenticated } = useAuth();
   const isAuth = isAuthenticated();
-
-  if (isAuthenticated() && to.name) {
-    const token = getToken() || '';
-
-    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/logs/navigation`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({ tab_name: String(to.name) })
-    }).catch(err => {
-      console.warn("Failed to log navigation:", err);
-    });
-    logUXToBackend(String(to.name), token);
-  }
 
   // if route requires auth and user is not loged in => redirect to registration
   if (to.meta.requiresAuth && !isAuth) {
