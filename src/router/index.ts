@@ -52,7 +52,7 @@ router.beforeEach((to, from, next) => {
   const isAuth = isAuthenticated();
 
   if (isAuthenticated() && to.name) {
-    const token = getToken();
+    const token = getToken() || '';
 
     fetch(`${import.meta.env.VITE_API_BASE_URL}/api/logs/navigation`, {
       method: 'POST',
