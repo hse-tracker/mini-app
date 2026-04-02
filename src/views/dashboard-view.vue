@@ -4,6 +4,7 @@ import router from '@/router'
 import { onMounted, ref } from 'vue'
 import { useAuth } from '@/composables/use-auth.ts'
 import subjectBubble from '@/components/subject/subject-bubble.vue';
+import { trackEvent, logUXToBackend } from '@/utils/analytics';
 
 const { getToken, logout } = useAuth()
 
@@ -47,6 +48,12 @@ const fetchSubjects = async () => {
 }
 
 const viewMode = ref<'list' | 'bubble'>('bubble')
+
+const switchViewMode = (mode: 'list' | 'bubble') => {
+  viewMode.value = mode;
+  trackEvent('view_switched', { view_type: mode });
+  logUXToBackend(`view_switched_to_${mode}`, getToken() || '');
+}
 
 onMounted(() => {
   fetchSubjects()
@@ -124,7 +131,7 @@ const closeErrorSheet = () => {
         alt="list"
         class="cursor-pointer transition-opacity"
         :class="{ 'opacity-30': viewMode === 'bubble' }"
-        @click="viewMode = 'list'"
+        @click="switchViewMode('list')"
       >
       <!--Bubble toggle-->
       <img
@@ -132,7 +139,7 @@ const closeErrorSheet = () => {
         alt="bubble"
         class="cursor-pointer transition-opacity"
         :class="{ 'opacity-30': viewMode === 'list' }"
-        @click="viewMode = 'bubble'"
+        @click="switchViewMode('bubble')"
       >
     </div>
 
@@ -181,7 +188,7 @@ const closeErrorSheet = () => {
 
     <!--Add new subject-->
     <div
-      @click="router.push({ name: 'AddSubject' });"
+      @click="trackEvent('start_setup'); router.push({ name: 'AddSubject' });"
       class="fixed bottom-5 flex items-center justify-center h-24 w-24 rounded-full bg-button border-3 border-white">
       <img src="/img/UI/plus.svg" alt="">
     </div>

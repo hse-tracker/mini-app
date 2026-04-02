@@ -1,3 +1,16 @@
+<script setup lang="ts">
+import { onMounted } from 'vue';
+import { trackEvent } from '@/utils/analytics';
+
+onMounted(() => {
+  const tg = window.Telegram?.WebApp;
+  if (tg) {
+    const startParam = tg.initDataUnsafe?.start_param || 'organic';
+    trackEvent('open_app', { source: startParam });
+  }
+});
+</script>
+
 <template>
   <router-view v-slot="{ Component, route }">
     <transition name="page-slide" mode="out-in">
