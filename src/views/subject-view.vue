@@ -77,7 +77,7 @@ onMounted(() => {
 // main node ("Итог")
 const rootNode = computed(() => subjectData.value?.structure?.[0] || null)
 
-const rootChildren = computed(() => rootNode.value?.children ||[])
+const rootChildren = computed<any[]>(() => rootNode.value?.children || [])
 const folders = computed(() => {
   return rootChildren.value.filter((child: any) => child.type === 'folder' || child.children?.length > 0)
 })
