@@ -86,12 +86,16 @@ const isAnyDialModified = computed(() => {
   return Object.values(predictions.value).some(p => Math.abs(p.current - p.original) > 0.01);
 })
 
+const originalOverallGrade = computed(() => {
+  const val = rootNode.value?.value;
+  if (!val) return '0.0';
+  const num = parseFloat(val.replace(',', '.'));
+  return isNaN(num) ? val : num.toFixed(1);
+});
+
 const displayPredictedGrade = computed(() => {
   if (!isAnyDialModified.value) {
-    const val = rootNode.value?.value;
-    if (!val) return '0.0';
-    const num = parseFloat(val.replace(',', '.'));
-    return isNaN(num) ? val : num.toFixed(1);
+    return originalOverallGrade.value;
   }
 
   let sum = 0;
@@ -153,15 +157,30 @@ const updatePrediction = (id: number, val: number) => {
         <div class="relative w-82 h-82 text-[7rem] flex justify-center items-center text-text-black bg-button border-6 border-white rounded-full font-semibold shadow-2xl">
 
           <!-- Dots on the main grade -->
-          <div v-for="child in rootChildren" :key="'dot-' + child.id"
+          <div v-for="(child, index) in rootChildren" :key="'dot-' + child.id"
                class="absolute top-0 left-0 w-full h-full pointer-events-none transition-transform duration-75"
                :style="{ transform: `rotate(${((predictions[child.id]?.current || 0) * 36) + 180}deg)` }">
-            <div class="mx-auto w-2 h-2 mt-6 rounded-full transition-colors duration-300"
+
+            <div class="mx-auto w-2 h-2 rounded-full transition-colors duration-300"
+                 :style="{ marginTop: `${16 + (index % 4) * 12}px` }"
                  :class="(predictions[child.id]?.current !== predictions[child.id]?.original) ? 'bg-accent-red' : 'bg-text-secondary'">
             </div>
           </div>
 
-          <span class="z-10">{{ displayPredictedGrade }}</span>
+          <!-- Grade texts container -->
+          <div class="z-10 flex flex-col items-center justify-center relative w-full h-full">
+
+            <!-- Original grade -->
+            <div
+              class="absolute top-[20%] text-text-secondary text-3xl font-medium transition-opacity duration-300"
+              :class="isAnyDialModified ? 'opacity-100' : 'opacity-0'"
+            >
+              {{ originalOverallGrade }}
+            </div>
+
+            <!-- New predicted grade -->
+            <span>{{ displayPredictedGrade }}</span>
+          </div>
         </div>
 
         <!--Assessments block (Root Children - ТЕПЕРЬ С КРУТИЛКАМИ)-->
@@ -193,7 +212,6 @@ const updatePrediction = (id: number, val: number) => {
           :folder="folder"
         />
       </div>
-
     </div>
   </div>
 </template>
