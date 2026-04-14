@@ -15,10 +15,23 @@ const displayGrade = computed(() => {
 });
 
 const displayName = computed(() => {
-  if (!props.element.name) return '';
-  return props.element.name.length > 7
-    ? props.element.name.slice(0, 7) + '...'
-    : props.element.name;
+  let name = props.element.name;
+  if (!name) return '';
+
+  const num = parseInt(name, 10);
+  if (!isNaN(num) && num > 45000 && num < 50000) {
+    const date = new Date(1899, 11, 30);
+    date.setDate(date.getDate() + num);
+
+    const d = String(date.getDate()).padStart(2, '0');
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const y = date.getFullYear();
+    name = `${d}.${m}.${y}`;
+  }
+
+  return name.length > 7
+    ? name.slice(0, 7) + '...'
+    : name;
 });
 </script>
 
