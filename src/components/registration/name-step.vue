@@ -35,7 +35,7 @@ const isValid = computed(() => {
       @input="handleInput"
       placeholder="Иванов Иван Иванович"
       @keydown.enter="isValid && emit('next')"
-      class="fullName-input w-50"
+      class="fullName-input w-50 text-center"
     >
 
     <div v-if="!isValid" class="h-6"></div>

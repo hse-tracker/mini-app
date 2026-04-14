@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, onMounted, onUnmounted } from 'vue'
 import router from '@/router'
 
 const props = defineProps<{
@@ -60,6 +60,45 @@ const offsets =[
 ];
 const offsetClass = computed(() => offsets[props.index % offsets.length]);
 
+const bubbleRef = ref<HTMLElement | null>(null);
+const dodgeTransform = ref('translate(0px, 0px)');
+
+const handleScroll = () => {
+  if (!bubbleRef.value) return;
+  const rect = bubbleRef.value.getBoundingClientRect();
+
+  const fabX = window.innerWidth / 2;
+  const fabY = window.innerHeight - 60;
+
+  const bubbleX = rect.left + rect.width / 2;
+  const bubbleY = rect.top + rect.height / 2;
+
+  const dx = bubbleX - fabX;
+  const dy = bubbleY - fabY;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+
+  if (dist < 110) {
+    const pushStrength = ((110 - dist) / 110) * 25;
+    const angle = Math.atan2(dy, dx);
+    const tx = Math.cos(angle) * pushStrength;
+    const ty = Math.sin(angle) * pushStrength;
+    dodgeTransform.value = `translate(${tx}px, ${ty}px)`;
+  } else {
+    dodgeTransform.value = 'translate(0px, 0px)';
+  }
+};
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll, { passive: true });
+  window.addEventListener('touchmove', handleScroll, { passive: true });
+  handleScroll();
+});
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll);
+  window.removeEventListener('touchmove', handleScroll);
+});
+
 const handleClick = () => {
   if (props.subject.status === 'error') {
     emit('show-error', props.subject.error_message || '')
@@ -71,7 +110,9 @@ const handleClick = () => {
 
 <template>
   <div
+    ref="bubbleRef"
     :class="offsetClass"
+    :style="{ transform: dodgeTransform, transition: 'transform 0.1s ease-out' }"
   >
     <div
       @click="handleClick"

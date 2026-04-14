@@ -55,6 +55,7 @@ const finishRegistration = async () => {
     // checker if token exists
     if (data.token) {
       setToken(data.token)
+      localStorage.setItem('user_group', formData.group)
       await router.push({ name: 'Tutorial' });
     } else {
       throw new Error("No response from the server")

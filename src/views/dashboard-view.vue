@@ -40,7 +40,7 @@ const fetchSubjects = async () => {
     console.log(data)
 
     subjects.value = data || []
-    
+
     if (subjects.value.length > 0) {
       const tracked = JSON.parse(localStorage.getItem('tracked_subscriptions') || '[]')
       let hasNewSubscriptions = false
@@ -193,7 +193,7 @@ const closeErrorSheet = () => {
       <div
         v-else
         class="flex flex-row flex-wrap justify-center items-center gap-x-8 gap-y-8
-        w-86 h-160 shadow-2xl px-6 mt-3 rounded-4xl bg-color-button py-8 p-5">
+        w-86 min-h-[40rem] pb-36 shadow-2xl px-6 mt-3 rounded-4xl bg-color-button py-8 p-5">
         <subjectBubble
           v-for="(subject, index) in subjects"
           :key="subject.id"

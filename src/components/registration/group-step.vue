@@ -27,7 +27,7 @@ const isValid = computed(() => props.modelValue.length >= 3);
       @input="handleInput"
       @keydown.enter="isValid && emit('next')"
       placeholder="Б23ДЗ10"
-      class="group-input"
+      class="group-input text-center"
     >
 
     <div v-if="!isValid" class="h-6"></div>
