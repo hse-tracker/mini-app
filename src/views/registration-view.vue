@@ -69,7 +69,7 @@ const finishRegistration = async () => {
 <template>
   <div class="h-full">
     <!--Header with navigation-->
-    <header class="flex flex-row flex-nowrap h-4 w-full justify-between items-center mt-16">
+    <header class="flex flex-row flex-nowrap h-4 w-full justify-between items-center mt-14">
       <div v-if="step === 1"></div>
       <img class="ml-6" v-if="step > 1" @click="step--" src="/img/back_arrow.svg" alt="" />
 
