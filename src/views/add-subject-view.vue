@@ -41,16 +41,26 @@ const sendSubject = async () => {
 
     // error checker
     if (!response.ok) {
-      throw new Error(`${response.status}`)
+      let errorMessage = `Произошла ошибка (код ${response.status})`;
+      try {
+        const errorData = await response.json();
+        if (errorData.error) {
+          errorMessage = errorData.error;
+        }
+      } catch (err) {
+        console.warn("Не удалось прочитать JSON ошибки:", err);
+      }
+
+      throw new Error(errorMessage);
     }
 
     trackEvent('new_sheet_added');
 
     await router.push({ name: 'Dashboard' })
 
-  } catch (e) {
+  } catch (e: any) {
     console.error(e)
-    alert(e)
+    alert(e.message || 'Не удалось добавить предмет')
   }
 }
 </script>
