@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+@theme {
+  --color-black-background: #4E4E4E;
+  --color-background: #F2F2F6;
+  --color-button: #F4F4F4;
+  --color-surface: #ffffff;
+  --color-text-primary: #1A1A1A;
+  --color-text-black: #3a3a3a;
+  --color-text-secondary: #8E8E93;
+  --color-accent-red: #FF453A;
+  --color-active-state: #000000;
+  --color-tutor: rgba(37, 37, 37, 0.8);
+}
+
+/* --- reset css --- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+* {
+  vertical-align: baseline;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+ol, ul, menu {
+  list-style: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  text-align: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  box-shadow: none;
+}
+button {
+  cursor: pointer;
+}
+textarea {
+  resize: vertical;
+  overflow: auto;
+}
+[hidden] {
+  display: none !important;
+}
+/* --- reset css --- */
+
+body {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+
+  background-color: #F2F2F6;
+  overflow-x: hidden;
+}
