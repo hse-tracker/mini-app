@@ -67,7 +67,10 @@ const getClientXY = (e: MouseEvent | TouchEvent) => {
   if ('touches' in e) {
     const touchEvent = e as TouchEvent;
     if (touchEvent.touches && touchEvent.touches.length > 0) {
-      return { x: touchEvent.touches[0].clientX, y: touchEvent.touches[0].clientY };
+      const touch = touchEvent.touches[0];
+      if (touch) {
+        return { x: touch.clientX, y: touch.clientY };
+      }
     }
   } else {
     const mouseEvent = e as MouseEvent;
