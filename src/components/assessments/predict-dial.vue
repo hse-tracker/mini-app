@@ -64,8 +64,17 @@ const dialScale = computed(() => {
 
 // Helper to get touch/mouse coordinates consistently
 const getClientXY = (e: MouseEvent | TouchEvent) => {
-  if ('touches' in e) {
+  if ('changedTouches' in e) {
     const touchEvent = e as TouchEvent;
+    // On touchend, the finger is lifted so 'touches' is empty.
+    // We must check 'changedTouches' to get the final coordinate.
+    if (touchEvent.changedTouches && touchEvent.changedTouches.length > 0) {
+      const touch = touchEvent.changedTouches[0];
+      if (touch) {
+        return { x: touch.clientX, y: touch.clientY };
+      }
+    }
+    // Fallback to 'touches' just in case
     if (touchEvent.touches && touchEvent.touches.length > 0) {
       const touch = touchEvent.touches[0];
       if (touch) {
